@@ -1,0 +1,1 @@
+Add drumroll.mp3 and reveal.mp3 here. The app works even if these files are missing.
