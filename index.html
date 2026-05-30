@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>World Cup Sweepstakes Draw</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="confettiLayer" class="confetti-layer"></div>
+
+  <section id="setupScreen" class="setup-screen">
+    <div class="setup-card">
+      <p class="eyebrow">Sweepstakes Builder</p>
+      <h1>World Cup Sweepstakes Draw</h1>
+      <p class="setup-subtitle">Choose a format, paste player names, and run a polished live draw.</p>
+
+      <div class="mode-grid">
+        <label class="mode-card selected">
+          <input type="radio" name="drawMode" value="1" checked />
+          <strong>Version 1</strong>
+          <span>1 Team Per Player</span>
+          <small>48 players · 1 random team each</small>
+        </label>
+
+        <label class="mode-card">
+          <input type="radio" name="drawMode" value="2" />
+          <strong>Version 2</strong>
+          <span>2 Teams Per Player</span>
+          <small>24 players · FIFA-ranked top/bottom pots</small>
+        </label>
+
+        <label class="mode-card">
+          <input type="radio" name="drawMode" value="3" />
+          <strong>Version 3</strong>
+          <span>3 Teams Per Player</span>
+          <small>16 players · FIFA-ranked top/mid/bottom pots</small>
+        </label>
+      </div>
+
+      <p class="seeding-note">Seeded modes use the FIFA Men’s World Ranking order to split the 48 teams into balanced pots.</p>
+
+      <div class="setup-info">
+        <div>
+          <span>Required players</span>
+          <strong id="requiredPlayersText">48</strong>
+        </div>
+        <div>
+          <span>Teams built in</span>
+          <strong>48</strong>
+        </div>
+        <div>
+          <span>Current names</span>
+          <strong id="currentNamesCount">0</strong>
+        </div>
+      </div>
+
+      <label class="setup-label" for="playersInput">Paste player names, one per line</label>
+      <textarea id="playersInput" spellcheck="false" placeholder="James Smith&#10;Michael Johnson&#10;John Williams&#10;..."></textarea>
+
+      <div class="buyin-row">
+        <label>
+          <span>Buy-in</span>
+          <input id="buyInInput" type="text" value="$25" />
+        </label>
+      </div>
+
+      <div class="payout-builder">
+        <div class="payout-builder-header">
+          <div>
+            <h2>Payouts</h2>
+            <p>Choose which prizes you want to include and edit the amounts.</p>
+          </div>
+          <button id="standardPayoutsBtn" type="button" class="secondary small-btn">Standard</button>
+        </div>
+
+        <div id="payoutOptions" class="payout-options">
+          <label class="payout-option">
+            <input type="checkbox" data-prize-key="winner" checked />
+            <span>Champion</span>
+            <input type="text" data-prize-amount="winner" value="$750" />
+          </label>
+
+          <label class="payout-option">
+            <input type="checkbox" data-prize-key="runnerUp" checked />
+            <span>Runner-Up</span>
+            <input type="text" data-prize-amount="runnerUp" value="$250" />
+          </label>
+
+          <label class="payout-option">
+            <input type="checkbox" data-prize-key="thirdPlace" checked />
+            <span>Third Place</span>
+            <input type="text" data-prize-amount="thirdPlace" value="$100" />
+          </label>
+
+          <label class="payout-option">
+            <input type="checkbox" data-prize-key="worstTeam" checked />
+            <span>Worst Team</span>
+            <input type="text" data-prize-amount="worstTeam" value="$100" />
+          </label>
+
+          <label class="payout-option bonus">
+            <input type="checkbox" data-prize-key="goldenBoot" />
+            <span>Golden Boot</span>
+            <input type="text" data-prize-amount="goldenBoot" value="$50" />
+          </label>
+
+          <label class="payout-option bonus">
+            <input type="checkbox" data-prize-key="goldenGlove" />
+            <span>Golden Glove</span>
+            <input type="text" data-prize-amount="goldenGlove" value="$50" />
+          </label>
+
+          <label class="payout-option bonus">
+            <input type="checkbox" data-prize-key="mostGoalsTeam" />
+            <span>Most Goals Scored</span>
+            <input type="text" data-prize-amount="mostGoalsTeam" value="$50" />
+          </label>
+
+          <label class="payout-option bonus">
+            <input type="checkbox" data-prize-key="mostRedCards" />
+            <span>Most Red Cards</span>
+            <input type="text" data-prize-amount="mostRedCards" value="$25" />
+          </label>
+        </div>
+      </div>
+
+      <div class="setup-actions">
+        <button id="loadExampleBtn" class="secondary">Load Example Names</button>
+        <button id="startDrawBtn">Start Draw</button>
+      </div>
+
+      <p id="setupError" class="setup-error"></p>
+    </div>
+  </section>
+
+  <div id="drawApp" class="app hidden">
+    <header class="topbar">
+      <div class="title-block">
+        <p class="eyebrow">Live Random Draw</p>
+        <h1 id="appTitle">World Cup Sweepstakes</h1>
+      </div>
+
+      <div id="prizeStrip" class="prize-strip" aria-label="Prize payouts"></div>
+    </header>
+
+    <main class="layout">
+      <aside class="panel remaining-panel">
+        <div class="panel-header">
+          <div><h2>Remaining Teams</h2></div>
+          <span id="remainingCount">48</span>
+        </div>
+        <div id="remainingTeams" class="team-grid"></div>
+      </aside>
+
+      <section class="stage">
+        <div class="stage-inner">
+          <div id="drawStatus" class="draw-status">Ready to Begin</div>
+
+          <div class="player-card">
+            <span id="playerSubLabel" class="label">Current Player</span>
+            <strong id="playerName">Click “Draw Player”</strong>
+          </div>
+
+          <div id="revealCard" class="reveal-card mystery">
+            <div class="mystery-content">
+              <span>?</span>
+              <p>Team Reveal</p>
+            </div>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-text">
+              <span id="progressText">0 assigned</span>
+              <span id="finalModeText"></span>
+            </div>
+            <div class="progress-bar"><div id="progressFill"></div></div>
+          </div>
+
+          <div class="controls">
+            <button id="drawPlayerBtn">Draw Player</button>
+            <button id="revealTeamBtn" disabled>Reveal Team</button>
+            <button id="autoCompleteBtn" class="secondary">Auto Complete</button>
+            <button id="exportBtn" class="secondary" style="display:none;">Export PNG</button>
+            <button id="showcaseBtn" class="secondary">Showcase</button>
+            <button id="fullscreenBtn" class="secondary">Fullscreen</button>
+            <button id="resetBtn" class="danger">Reset</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel assigned-panel">
+        <div class="panel-header">
+          <div><h2>Assignments</h2></div>
+          <span id="assignedCount">0</span>
+        </div>
+        <div id="assignments" class="assignment-list"></div>
+      </aside>
+    </main>
+
+    <footer class="bottombar">
+      <span id="buyInLabel">$25 Buy-In</span>
+      <span id="totalPotLabel">$1,200 Total Pot</span>
+      <span id="modeLabel">1 Team Each</span>
+    </footer>
+  </div>
+
+  <section id="endingScreen" class="ending-screen" aria-hidden="true">
+    <div class="ending-header">
+      <div>
+        <p class="eyebrow">Draw Showcase</p>
+        <h2>World Cup Sweepstakes Results</h2>
+      </div>
+      <button id="closeEndingBtn" class="secondary">Back to Draw</button>
+    </div>
+
+    <div class="ending-scroll-window">
+      <div id="endingScrollTrack" class="ending-scroll-track"></div>
+    </div>
+  </section>
+
+  <div class="watermark">Created by Micheál Loughran</div>
+
+  <audio id="drumrollSound" src="sounds/drumroll.mp3" preload="auto"></audio>
+  <audio id="revealSound" src="sounds/reveal.mp3" preload="auto"></audio>
+  <script src="script.js"></script>
+</body>
+</html>
