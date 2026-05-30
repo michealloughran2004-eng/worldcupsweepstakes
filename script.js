@@ -915,12 +915,15 @@ function renderEndingScreen() {
 
 async function exportResults() {
   const canvas = document.createElement("canvas");
+
+  const isSingleTeamMode = config.mode === 1;
   const width = 2400;
-  const height = 3000;
-  const cols = config.mode === 1 ? 4 : 3;
+  const height = isSingleTeamMode ? 3600 : 3000;
+  const cols = isSingleTeamMode ? 4 : 3;
   const rows = Math.ceil(assignments.length / cols);
+
   const margin = 90;
-  const gap = 28;
+  const gap = isSingleTeamMode ? 22 : 28;
   const headerHeight = 230;
   const cardW = (width - margin * 2 - gap * (cols - 1)) / cols;
   const cardH = (height - margin * 2 - headerHeight - gap * (rows - 1)) / rows;
@@ -966,24 +969,30 @@ async function exportResults() {
 
     roundRect(ctx, x, y, cardW, cardH, 24, "rgba(255,255,255,0.08)", "rgba(255,255,255,0.22)");
 
-    const flagAreaH = Math.min(130, cardH * 0.44);
+    const flagAreaH = isSingleTeamMode ? 78 : Math.min(130, cardH * 0.44);
+    const flagAreaY = y + 16;
     const flagW = (cardW - 42 - 12 * (item.teams.length - 1)) / Math.max(1, item.teams.length);
 
     item.teams.forEach((team, teamIndex) => {
       const img = imageCache[team.flag];
       const fx = x + 21 + teamIndex * (flagW + 12);
-      const fy = y + 18;
+      const fy = flagAreaY;
+
       roundRect(ctx, fx, fy, flagW, flagAreaH, 14, "rgba(255,255,255,0.06)", "rgba(255,255,255,0.10)");
       if (img) drawContainedImage(ctx, img, fx + 8, fy + 8, flagW - 16, flagAreaH - 16);
     });
 
+    const playerY = y + flagAreaH + 58;
+    const teamY = y + cardH - 28;
+
     ctx.fillStyle = "#ffffff";
-    ctx.font = "900 32px Arial";
-    wrapText(ctx, item.player, x + cardW / 2, y + flagAreaH + 64, cardW - 34, 34, 2);
+    ctx.font = isSingleTeamMode ? "900 27px Arial" : "900 32px Arial";
+    ctx.textAlign = "center";
+    wrapText(ctx, item.player, x + cardW / 2, playerY, cardW - 34, isSingleTeamMode ? 28 : 34, 2);
 
     ctx.fillStyle = "#d8b76c";
-    ctx.font = "900 24px Arial";
-    wrapText(ctx, item.teams.map(t => t.name).join(" · ").toUpperCase(), x + cardW / 2, y + cardH - 44, cardW - 34, 27, 2);
+    ctx.font = isSingleTeamMode ? "900 18px Arial" : "900 24px Arial";
+    wrapText(ctx, item.teams.map(t => t.name).join(" · ").toUpperCase(), x + cardW / 2, teamY, cardW - 34, isSingleTeamMode ? 20 : 27, 2);
   }
 
   ctx.fillStyle = "rgba(255,255,255,0.45)";
