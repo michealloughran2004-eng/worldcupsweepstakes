@@ -60,14 +60,13 @@ If running locally by double-clicking `index.html`, PNG export may be blocked by
 48-player / 1-team exports now use a taller canvas and adjusted card text positions so player names and country names do not overlap.
 
 
-## Clean mobile + SEO build
+## Real mobile fix
 
-This build removes the ad placeholders and focuses on mobile usability:
-- Mobile order: draw stage first, assignments second, remaining teams third.
-- No ad rails or ad banners.
-- Normal page scrolling on phones.
-- Fixed footer/watermark overlay behavior on mobile.
-- Added SEO title, meta description, canonical URL, Open Graph tags.
-- Added Google Analytics tag.
-- Added sitemap.xml and robots.txt.
-- Added searchable homepage content.
+This version removes ad slots completely and uses a true mobile layout:
+- Draw stage first
+- Assignments second
+- Remaining teams third
+- No fixed footer overlay
+- No ad placeholders
+- SEO content hidden on mobile so it does not interrupt app use
+- Normal page scrolling restored
