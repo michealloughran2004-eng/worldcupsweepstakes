@@ -1760,3 +1760,65 @@ button.danger {
     padding-top: 10px !important;
   }
 }
+
+
+/* Final mobile polish */
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+@media screen and (max-width: 900px) {
+  .setup-screen.hidden {
+    display: none !important;
+  }
+
+  .controls {
+    justify-items: center !important;
+    align-items: center !important;
+  }
+
+  .controls button {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  #exportBtn,
+  #showcaseBtn,
+  #fullscreenBtn,
+  #resetBtn,
+  #drawPlayerBtn,
+  #revealTeamBtn,
+  #autoCompleteBtn {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .stage-inner {
+    align-items: center !important;
+  }
+
+  .progress-wrap,
+  .player-card,
+  .reveal-card {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .controls {
+    grid-template-columns: 1fr !important;
+  }
+
+  .controls button {
+    max-width: 340px !important;
+  }
+}

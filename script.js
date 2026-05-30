@@ -873,7 +873,14 @@ function resetRevealCard() {
 
 function showDrawApp() {
   setupScreen.classList.add("hidden");
+  setupScreen.setAttribute("aria-hidden", "true");
   drawApp.classList.remove("hidden");
+  drawApp.setAttribute("aria-hidden", "false");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 }
 
 function showCompletionScreen() {

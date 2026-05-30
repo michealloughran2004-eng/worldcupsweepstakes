@@ -70,3 +70,10 @@ This version removes ad slots completely and uses a true mobile layout:
 - No ad placeholders
 - SEO content hidden on mobile so it does not interrupt app use
 - Normal page scrolling restored
+
+
+## Mobile polish
+
+- Setup screen is fully removed from layout after starting the draw.
+- Page scrolls back to the top of the draw board after Start Draw.
+- Mobile control buttons are centered.
